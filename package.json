@@ -1,0 +1,41 @@
+{
+  "name": "react-hooklib",
+  "version": "1.0.0",
+  "description": "Helpers working around React Hooks API",
+  "main": "lib/index.js",
+  "module": "esm/index.js",
+  "files": [
+    "lib/",
+    "esm/",
+    "DOCUMENTATION.md"
+  ],
+  "types": "lib/index.d.ts",
+  "typings": "lib/index.d.ts",
+  "scripts": {
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "build:cjs": "tsc",
+    "build:es": "tsc -m esNext --outDir esm",
+    "build": "npm run clean && npm run build:cjs && npm run build:es && npm run doc",
+    "clean": "rimraf lib esm",
+    "doc": "doxdox 'lib/**/*.js' --layout markdown --output DOCUMENTATION.md",
+    "preversion": "npm run test",
+    "version": "npm run build",
+    "postversion": "git push --follow-tags"
+  },
+  "keywords": [
+    "react",
+    "hooks"
+  ],
+  "author": "James Yang <26634873@qq.com>",
+  "license": "ISC",
+  "devDependencies": {
+    "doxdox": "^3.0.0",
+    "jest": "^24.7.1",
+    "rimraf": "^2.6.3",
+    "typescript": "^3.4.3"
+  },
+  "peerDependencies": {
+    "react": "^16.8.6"
+  }
+}
