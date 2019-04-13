@@ -4,6 +4,10 @@ Helpers working around [React Hooks API](https://reactjs.org/docs/hooks-referenc
 
 This lib want keep as `helpers`, but not targeting a fullly [Custom Hooks](https://reactjs.org/docs/hooks-custom.html), it's targeting dev experience when building component based on React Hooks.
 
+[![Build Status](https://travis-ci.org/futurist/react-hooklib.svg?branch=master)](https://travis-ci.org/futurist/react-hooklib)
+[![NPM Version](https://img.shields.io/npm/v/react-hooklib.svg)](https://www.npmjs.com/package/react-hooklib)
+
+
 ### Install
 
 You can install from [NPM](https://www.npmjs.com/package/react-hooklib), or use files in `lib`.
@@ -33,5 +37,5 @@ function Hello(){
 
 ### API
 
-[See API Document](https://github.com/futurist/react-hooklib/blob/master/DOCUMENTATION.md)
+[See API Document](https://github.com/futurist/react-hooklib/blob/master/api.md)
 

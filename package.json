@@ -18,7 +18,7 @@
     "build:es": "tsc -m esNext --outDir esm",
     "build": "npm run clean && npm run build:cjs && npm run build:es && npm run doc",
     "clean": "rimraf lib esm",
-    "doc": "doxdox 'lib/**/*.js' --layout markdown --output DOCUMENTATION.md",
+    "doc": "jsdoc2md --template api.hbs --files lib/*.js > api.md",
     "preversion": "npm run test",
     "version": "npm run build",
     "postversion": "git push --follow-tags"
@@ -30,8 +30,8 @@
   "author": "James Yang <26634873@qq.com>",
   "license": "ISC",
   "devDependencies": {
-    "doxdox": "^3.0.0",
     "jest": "^24.7.1",
+    "jsdoc-to-markdown": "^4.0.1",
     "rimraf": "^2.6.3",
     "typescript": "^3.4.3"
   },
