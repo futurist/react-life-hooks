@@ -33,4 +33,5 @@ function Hello(){
 
 ### API
 
-[See API Document](https://github.com/futurist/react-hooklib/DOCUMENTATION.md)
+[See API Document](https://github.com/futurist/react-hooklib/blob/master/DOCUMENTATION.md)
+
