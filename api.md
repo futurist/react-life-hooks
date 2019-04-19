@@ -55,7 +55,7 @@
 <p>Like setInterval, but auto destroyed when re-render</p>
 </blockquote>
 </dd>
-<dt><a href="#useTick">useTick(tickFn, clearTickFn, callback, delay)</a> ⇒ <code>React.RefObject</code></dt>
+<dt><a href="#useTick">useTick(tickFn, clearTickFn, callback, options)</a> ⇒ <code>React.RefObject</code></dt>
 <dd><blockquote>
 <p>Tick like functions helper method, auto destroyed when re-render</p>
 </blockquote>
@@ -67,6 +67,11 @@
 <p>Usage: <code>exposeRef(expose =&gt; (props, ref) =&gt; ReactNode)</code></p>
 <p>In function component, should call <code>expose(ref, fn, deps)</code></p>
 <p>The <code>expose</code> function just a wrapper of <code>useImperativeHandle</code></p>
+</dd>
+<dt><a href="#onChange">onChange(value, callback)</a></dt>
+<dd><blockquote>
+<p>Check if value changed using shallowEqual check</p>
+</blockquote>
 </dd>
 </dl>
 
@@ -192,7 +197,7 @@ forceUpdate is similar to this.forceUpdate in Class Component
 
 <a name="useTick"></a>
 
-## useTick(tickFn, clearTickFn, callback, delay) ⇒ <code>React.RefObject</code>
+## useTick(tickFn, clearTickFn, callback, options) ⇒ <code>React.RefObject</code>
 > Tick like functions helper method, auto destroyed when re-render
 
 **Kind**: global function  
@@ -200,10 +205,10 @@ forceUpdate is similar to this.forceUpdate in Class Component
 
 | Param | Type | Description |
 | --- | --- | --- |
-| tickFn | <code>function</code> | to run like setTimeout |
-| clearTickFn | <code>function</code> | to run like clearTimeout |
+| tickFn | <code>function</code> | e.g. setTimeout, setInterval, requestIdleCallback, request​Animation​Frame |
+| clearTickFn | <code>function</code> | e.g. clearTimeout, clearInterval, cancel​Idle​Callback, cancel​Animation​Frame |
 | callback | <code>function</code> | run when onTick |
-| delay | <code>Number</code> \| <code>null</code> \| <code>undefined</code> | seconds to delay, null to stop |
+| options | <code>Number</code> \| <code>null</code> \| <code>undefined</code> | options to pass with callback, null to stop |
 
 <a name="exposeRef"></a>
 
@@ -221,6 +226,18 @@ The `expose` function just a wrapper of `useImperativeHandle`
 | Param | Type | Description |
 | --- | --- | --- |
 | componentFactory | <code>function</code> | `exposeFunction -> React.Component`, the componentFactory should return component |
+
+<a name="onChange"></a>
+
+## onChange(value, callback)
+> Check if value changed using shallowEqual check
+
+**Kind**: global function  
+
+| Param | Type | Description |
+| --- | --- | --- |
+| value | <code>any</code> | The value to check, with previous cached version |
+| callback | <code>function</code> | prevValue => any, Passed in previous value when current value changed |
 
 
 * * *

@@ -36,6 +36,9 @@
     "typescript": "^3.4.3"
   },
   "peerDependencies": {
-    "react": "^16.8.6"
+    "react": "^16.8.0"
+  },
+  "dependencies": {
+    "fbjs": "^1.0.0"
   }
 }

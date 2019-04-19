@@ -85,13 +85,13 @@ export declare function useInterval(callback: any, delay: any): any;
 /**
  * > Tick like functions helper method, auto destroyed when re-render
  *
- * @param tickFn {Function} to run like setTimeout
- * @param clearTickFn {Function} to run like clearTimeout
+ * @param tickFn {Function} e.g. setTimeout, setInterval, requestIdleCallback, request​Animation​Frame
+ * @param clearTickFn {Function} e.g. clearTimeout, clearInterval, cancel​Idle​Callback, cancel​Animation​Frame
  * @param callback {Function} run when onTick
- * @param delay {Number|null|undefined} seconds to delay, null to stop
+ * @param options {Number|null|undefined} options to pass with callback, null to stop
  * @returns {React.RefObject} the ref to setInterval id
  */
-export declare function useTick(tickFn: any, clearTickFn: any, callback: any, delay: any): any;
+export declare function useTick(tickFn: any, clearTickFn: any, callback: any, options: any): any;
 /**
  * > Expose function component ref to parent
  *
@@ -105,3 +105,10 @@ export declare function useTick(tickFn: any, clearTickFn: any, callback: any, de
  * @returns {React.Component}
  */
 export declare function exposeRef(componentFactory: any): any;
+/**
+ * > Check if value changed using shallowEqual check
+ *
+ * @param value {any} The value to check, with previous cached version
+ * @param callback {Function} prevValue => any, Passed in previous value when current value changed
+ */
+export declare function onChange(value: any, callback: any): boolean;

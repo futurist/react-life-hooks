@@ -7,6 +7,8 @@ import {
   useImperativeHandle,
   useState,
 } from 'react'
+import shallowEqual from 'fbjs/lib/shallowEqual'
+
 const updateReducer = x => x + 1;
 
 /**
@@ -159,13 +161,13 @@ export function useInterval (callback, delay) {
 /**
  * > Tick like functions helper method, auto destroyed when re-render
  *
- * @param tickFn {Function} to run like setTimeout
- * @param clearTickFn {Function} to run like clearTimeout
+ * @param tickFn {Function} e.g. setTimeout, setInterval, requestIdleCallback, request​Animation​Frame
+ * @param clearTickFn {Function} e.g. clearTimeout, clearInterval, cancel​Idle​Callback, cancel​Animation​Frame
  * @param callback {Function} run when onTick
- * @param delay {Number|null|undefined} seconds to delay, null to stop
+ * @param options {Number|null|undefined} options to pass with callback, null to stop
  * @returns {React.RefObject} the ref to setInterval id
  */
-export function useTick (tickFn, clearTickFn, callback, delay) {
+export function useTick (tickFn, clearTickFn, callback, options) {
   const savedId = useRef()
   const savedCallback = useRef()
 
@@ -180,17 +182,17 @@ export function useTick (tickFn, clearTickFn, callback, delay) {
   // Set up the tick.
   useEffect(
     () => {
-      function tick () {
-        savedCallback.current()
+      function tick (arg) {
+        savedCallback.current(arg)
       }
-      if (delay !== null) {
-        let id = tickFn(tick, delay)
+      if (options !== null) {
+        let id = tickFn(tick, options)
         savedId.current = id
         return () => clearTickFn(savedId.current)
       }
       return
     },
-    [delay]
+    [options]
   )
   return savedId
 }
@@ -212,4 +214,21 @@ export function exposeRef (componentFactory) {
     useImperativeHandle(ref, fn, deps)
   }
   return forwardRef(componentFactory(expose))
+}
+
+/**
+ * > Check if value changed using shallowEqual check
+ *
+ * @param value {any} The value to check, with previous cached version
+ * @param callback {Function} prevValue => any, Passed in previous value when current value changed
+ */
+export function onChange (value, callback) {
+  const ref = useRef(value)
+  const {current} = ref
+  ref.current = value
+  const isChanged = !shallowEqual(value, current)
+  if(isChanged) {
+    callback && callback(current)
+  }
+  return isChanged
 }

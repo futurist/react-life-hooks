@@ -10,6 +10,7 @@ var __assign = (this && this.__assign) || function () {
     return __assign.apply(this, arguments);
 };
 import { forwardRef, useReducer, useRef, useEffect, useLayoutEffect, useImperativeHandle, } from 'react';
+import shallowEqual from 'fbjs/lib/shallowEqual';
 var updateReducer = function (x) { return x + 1; };
 /**
  * > initialize when component first render
@@ -155,13 +156,13 @@ export function useInterval(callback, delay) {
 /**
  * > Tick like functions helper method, auto destroyed when re-render
  *
- * @param tickFn {Function} to run like setTimeout
- * @param clearTickFn {Function} to run like clearTimeout
+ * @param tickFn {Function} e.g. setTimeout, setInterval, requestIdleCallback, request​Animation​Frame
+ * @param clearTickFn {Function} e.g. clearTimeout, clearInterval, cancel​Idle​Callback, cancel​Animation​Frame
  * @param callback {Function} run when onTick
- * @param delay {Number|null|undefined} seconds to delay, null to stop
+ * @param options {Number|null|undefined} options to pass with callback, null to stop
  * @returns {React.RefObject} the ref to setInterval id
  */
-export function useTick(tickFn, clearTickFn, callback, delay) {
+export function useTick(tickFn, clearTickFn, callback, options) {
     var savedId = useRef();
     var savedCallback = useRef();
     // Remember the latest callback.
@@ -170,16 +171,16 @@ export function useTick(tickFn, clearTickFn, callback, delay) {
     }, [callback]);
     // Set up the tick.
     useEffect(function () {
-        function tick() {
-            savedCallback.current();
+        function tick(arg) {
+            savedCallback.current(arg);
         }
-        if (delay !== null) {
-            var id = tickFn(tick, delay);
+        if (options !== null) {
+            var id = tickFn(tick, options);
             savedId.current = id;
             return function () { return clearTickFn(savedId.current); };
         }
         return;
-    }, [delay]);
+    }, [options]);
     return savedId;
 }
 /**
@@ -199,4 +200,20 @@ export function exposeRef(componentFactory) {
         useImperativeHandle(ref, fn, deps);
     };
     return forwardRef(componentFactory(expose));
+}
+/**
+ * > Check if value changed using shallowEqual check
+ *
+ * @param value {any} The value to check, with previous cached version
+ * @param callback {Function} prevValue => any, Passed in previous value when current value changed
+ */
+export function onChange(value, callback) {
+    var ref = useRef(value);
+    var current = ref.current;
+    ref.current = value;
+    var isChanged = !shallowEqual(value, current);
+    if (isChanged) {
+        callback && callback(current);
+    }
+    return isChanged;
 }
