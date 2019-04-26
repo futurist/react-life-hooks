@@ -6,6 +6,7 @@ import {
   useLayoutEffect,
   useImperativeHandle,
   useState,
+  useMemo
 } from 'react'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 
@@ -95,16 +96,22 @@ export function useLifeState (initialState = {}) {
     throw 'useLifeState initialState must be an object'
   }
   const forceUpdate = useUpdate()
-  const stateRef = useRef(initialState)
+  const stateRef = useMemo(
+    typeof initialState === 'function' ? initialState : ()=>initialState,
+    []
+  )
+  if(typeof stateRef !== 'object') {
+    throw 'initialState must be an object'
+  }
   return {
-    get state(){
-      return stateRef.current
+    get state() {
+      return stateRef
     },
     setState: (patch = {}, callback) => {
       if(typeof patch==='function') {
-        patch = patch(stateRef.current)
+        patch = patch(stateRef)
       }
-      stateRef.current = { ...stateRef.current, ...patch }
+      Object.assign(stateRef, patch)
       callback && callback()
       forceUpdate()
     },
@@ -119,18 +126,23 @@ export function useLifeState (initialState = {}) {
  * @returns {object} {state getter, dispatch} The .state getter never stale
  */
 export function useLifeReducer (reducer, initialState = {}) {
-  if(typeof initialState !== 'object') {
-    throw 'useLifeReducer initialState must be an object'
+  const stateRef = useMemo(
+    typeof initialState === 'function' ? initialState : ()=>initialState,
+    []
+  )
+  if(typeof stateRef !== 'object') {
+    throw 'initialState must be an object'
   }
-  const stateRef = useRef(initialState)
+  const forceUpdate = useUpdate()
   const [state, dispatch] = useReducer((stateRef, action)=>{
-    const value = reducer(stateRef.current, action)
-    stateRef.current = { ...stateRef.current, ...value }
+    const value = reducer(stateRef, action)
+    Object.assign(stateRef, value)
+    forceUpdate()
     return stateRef
   }, stateRef)
   return {
     get state() {
-      return stateRef.current
+      return stateRef
     },
     dispatch
   }

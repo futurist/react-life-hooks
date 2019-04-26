@@ -1,15 +1,4 @@
-var __assign = (this && this.__assign) || function () {
-    __assign = Object.assign || function(t) {
-        for (var s, i = 1, n = arguments.length; i < n; i++) {
-            s = arguments[i];
-            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
-                t[p] = s[p];
-        }
-        return t;
-    };
-    return __assign.apply(this, arguments);
-};
-import { forwardRef, useReducer, useRef, useEffect, useLayoutEffect, useImperativeHandle, } from 'react';
+import { forwardRef, useReducer, useRef, useEffect, useLayoutEffect, useImperativeHandle, useMemo } from 'react';
 import shallowEqual from 'fbjs/lib/shallowEqual';
 var updateReducer = function (x) { return x + 1; };
 /**
@@ -92,17 +81,20 @@ export function useLifeState(initialState) {
         throw 'useLifeState initialState must be an object';
     }
     var forceUpdate = useUpdate();
-    var stateRef = useRef(initialState);
+    var stateRef = useMemo(typeof initialState === 'function' ? initialState : function () { return initialState; }, []);
+    if (typeof stateRef !== 'object') {
+        throw 'initialState must be an object';
+    }
     return {
         get state() {
-            return stateRef.current;
+            return stateRef;
         },
         setState: function (patch, callback) {
             if (patch === void 0) { patch = {}; }
             if (typeof patch === 'function') {
-                patch = patch(stateRef.current);
+                patch = patch(stateRef);
             }
-            stateRef.current = __assign({}, stateRef.current, patch);
+            Object.assign(stateRef, patch);
             callback && callback();
             forceUpdate();
         },
@@ -117,18 +109,20 @@ export function useLifeState(initialState) {
  */
 export function useLifeReducer(reducer, initialState) {
     if (initialState === void 0) { initialState = {}; }
-    if (typeof initialState !== 'object') {
-        throw 'useLifeReducer initialState must be an object';
+    var stateRef = useMemo(typeof initialState === 'function' ? initialState : function () { return initialState; }, []);
+    if (typeof stateRef !== 'object') {
+        throw 'initialState must be an object';
     }
-    var stateRef = useRef(initialState);
+    var forceUpdate = useUpdate();
     var _a = useReducer(function (stateRef, action) {
-        var value = reducer(stateRef.current, action);
-        stateRef.current = __assign({}, stateRef.current, value);
+        var value = reducer(stateRef, action);
+        Object.assign(stateRef, value);
+        forceUpdate();
         return stateRef;
     }, stateRef), state = _a[0], dispatch = _a[1];
     return {
         get state() {
-            return stateRef.current;
+            return stateRef;
         },
         dispatch: dispatch
     };
