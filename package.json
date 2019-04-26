@@ -1,6 +1,6 @@
 {
   "name": "react-hooklib",
-  "version": "1.0.3",
+  "version": "1.0.4",
   "description": "Helpers working around React Hooks API",
   "main": "lib/index.js",
   "module": "esm/index.js",
