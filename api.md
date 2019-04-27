@@ -1,5 +1,5 @@
-# react-hooklib
-[![view on npm](https://img.shields.io/npm/v/react-hooklib.svg)](https://www.npmjs.org/package/react-hooklib)
+# react-life-hooks
+[![view on npm](https://img.shields.io/npm/v/react-life-hooks.svg)](https://www.npmjs.org/package/react-life-hooks)
 
 ## Functions
 

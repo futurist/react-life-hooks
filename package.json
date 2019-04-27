@@ -1,5 +1,5 @@
 {
-  "name": "react-hooklib",
+  "name": "react-life-hooks",
   "version": "1.0.4",
   "description": "Helpers working around React Hooks API",
   "main": "lib/index.js",
