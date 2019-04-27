@@ -150,7 +150,7 @@ forceUpdate is similar to this.forceUpdate in Class Component
 > A component life time version of useState, the state never stale and safe to use
 
 **Kind**: global function  
-**Returns**: <code>object</code> - {state getter, setState} The .state getter never stale  
+**Returns**: <code>object</code> - [state, setState] The state/setState never stale  
 
 | Param | Type | Description |
 | --- | --- | --- |
@@ -162,7 +162,7 @@ forceUpdate is similar to this.forceUpdate in Class Component
 > A component life time version of useReducer, the state never stale and safe to sue
 
 **Kind**: global function  
-**Returns**: <code>object</code> - {state getter, dispatch} The .state getter never stale  
+**Returns**: <code>object</code> - [state, dispatch] The state/dispatch never stale  
 
 | Param | Type | Description |
 | --- | --- | --- |

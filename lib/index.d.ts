@@ -49,23 +49,17 @@ export declare function useUpdate(): any;
  * > A component life time version of useState, the state never stale and safe to use
  *
  * @param initialState {object} The initial state object
- * @returns {object} {state getter, setState} The .state getter never stale
+ * @returns {object} [state, setState] The state/setState never stale
  */
-export declare function useLifeState(initialState?: {}): {
-    readonly state: any;
-    setState: (patch: {} | undefined, callback: any) => void;
-};
+export declare function useLifeState(initialState?: {}): any[];
 /**
  * > A component life time version of useReducer, the state never stale and safe to sue
  *
  * @param reducer {Function} The reducer function
  * @param initialState {object} The initial state object
- * @returns {object} {state getter, dispatch} The .state getter never stale
+ * @returns {object} [state, dispatch] The state/dispatch never stale
  */
-export declare function useLifeReducer(reducer: any, initialState?: {}): {
-    readonly state: any;
-    dispatch: any;
-};
+export declare function useLifeReducer(reducer: any, initialState?: {}): any[];
 /**
  * > Like setTimeout, but auto destroyed when re-render
  *

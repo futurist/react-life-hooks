@@ -1,4 +1,15 @@
-import { forwardRef, useReducer, useRef, useEffect, useLayoutEffect, useImperativeHandle, useMemo } from 'react';
+var __assign = (this && this.__assign) || function () {
+    __assign = Object.assign || function(t) {
+        for (var s, i = 1, n = arguments.length; i < n; i++) {
+            s = arguments[i];
+            for (var p in s) if (Object.prototype.hasOwnProperty.call(s, p))
+                t[p] = s[p];
+        }
+        return t;
+    };
+    return __assign.apply(this, arguments);
+};
+import { forwardRef, useReducer, useRef, useEffect, useLayoutEffect, useImperativeHandle, useState, useMemo, useCallback } from 'react';
 import shallowEqual from 'fbjs/lib/shallowEqual';
 var updateReducer = function (x) { return x + 1; };
 /**
@@ -73,39 +84,33 @@ export function useUpdate() {
  * > A component life time version of useState, the state never stale and safe to use
  *
  * @param initialState {object} The initial state object
- * @returns {object} {state getter, setState} The .state getter never stale
+ * @returns {object} [state, setState] The state/setState never stale
  */
 export function useLifeState(initialState) {
     if (initialState === void 0) { initialState = {}; }
-    if (typeof initialState !== 'object') {
-        throw 'useLifeState initialState must be an object';
-    }
-    var forceUpdate = useUpdate();
-    var stateRef = useMemo(typeof initialState === 'function' ? initialState : function () { return initialState; }, []);
+    var _a = useState(initialState), state = _a[0], setState = _a[1];
+    var stateRef = useMemo(function () { return state; }, []);
     if (typeof stateRef !== 'object') {
-        throw 'initialState must be an object';
+        throw 'initialState must be/return an object';
     }
-    return {
-        get state() {
-            return stateRef;
-        },
-        setState: function (patch, callback) {
-            if (patch === void 0) { patch = {}; }
-            if (typeof patch === 'function') {
-                patch = patch(stateRef);
-            }
-            Object.assign(stateRef, patch);
-            callback && callback();
-            forceUpdate();
-        },
-    };
+    var setStateRef = useCallback(function (patch) {
+        if (patch === void 0) { patch = {}; }
+        if (typeof patch === 'function') {
+            patch = patch(stateRef);
+        }
+        setState(__assign({}, stateRef, patch));
+    }, []);
+    return [
+        Object.assign(stateRef, state),
+        setStateRef,
+    ];
 }
 /**
  * > A component life time version of useReducer, the state never stale and safe to sue
  *
  * @param reducer {Function} The reducer function
  * @param initialState {object} The initial state object
- * @returns {object} {state getter, dispatch} The .state getter never stale
+ * @returns {object} [state, dispatch] The state/dispatch never stale
  */
 export function useLifeReducer(reducer, initialState) {
     if (initialState === void 0) { initialState = {}; }
@@ -113,19 +118,14 @@ export function useLifeReducer(reducer, initialState) {
     if (typeof stateRef !== 'object') {
         throw 'initialState must be an object';
     }
-    var forceUpdate = useUpdate();
     var _a = useReducer(function (stateRef, action) {
         var value = reducer(stateRef, action);
-        Object.assign(stateRef, value);
-        forceUpdate();
-        return stateRef;
+        return __assign({}, stateRef, value);
     }, stateRef), state = _a[0], dispatch = _a[1];
-    return {
-        get state() {
-            return stateRef;
-        },
-        dispatch: dispatch
-    };
+    return [
+        Object.assign(stateRef, state),
+        dispatch
+    ];
 }
 /**
  * > Like setTimeout, but auto destroyed when re-render

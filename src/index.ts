@@ -6,7 +6,8 @@ import {
   useLayoutEffect,
   useImperativeHandle,
   useState,
-  useMemo
+  useMemo,
+  useCallback
 } from 'react'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 
@@ -89,33 +90,24 @@ export function useUpdate () {
  * > A component life time version of useState, the state never stale and safe to use
  *
  * @param initialState {object} The initial state object
- * @returns {object} {state getter, setState} The .state getter never stale
+ * @returns {object} [state, setState] The state/setState never stale
  */
 export function useLifeState (initialState = {}) {
-  if(typeof initialState !== 'object') {
-    throw 'useLifeState initialState must be an object'
-  }
-  const forceUpdate = useUpdate()
-  const stateRef = useMemo(
-    typeof initialState === 'function' ? initialState : ()=>initialState,
-    []
-  )
+  const [state, setState] = useState(initialState)
+  const stateRef = useMemo(()=>state, [])
   if(typeof stateRef !== 'object') {
-    throw 'initialState must be an object'
+    throw 'initialState must be/return an object'
   }
-  return {
-    get state() {
-      return stateRef
-    },
-    setState: (patch = {}, callback) => {
-      if(typeof patch==='function') {
-        patch = patch(stateRef)
-      }
-      Object.assign(stateRef, patch)
-      callback && callback()
-      forceUpdate()
-    },
-  }
+  const setStateRef = useCallback((patch = {}) => {
+    if(typeof patch==='function') {
+      patch = patch(stateRef)
+    }
+    setState({...stateRef, ...patch})
+  }, [])
+  return [
+    Object.assign(stateRef, state),
+    setStateRef,
+  ]
 }
 
 /**
@@ -123,7 +115,7 @@ export function useLifeState (initialState = {}) {
  *
  * @param reducer {Function} The reducer function
  * @param initialState {object} The initial state object
- * @returns {object} {state getter, dispatch} The .state getter never stale
+ * @returns {object} [state, dispatch] The state/dispatch never stale
  */
 export function useLifeReducer (reducer, initialState = {}) {
   const stateRef = useMemo(
@@ -133,19 +125,14 @@ export function useLifeReducer (reducer, initialState = {}) {
   if(typeof stateRef !== 'object') {
     throw 'initialState must be an object'
   }
-  const forceUpdate = useUpdate()
   const [state, dispatch] = useReducer((stateRef, action)=>{
     const value = reducer(stateRef, action)
-    Object.assign(stateRef, value)
-    forceUpdate()
-    return stateRef
+    return {...stateRef, ...value}
   }, stateRef)
-  return {
-    get state() {
-      return stateRef
-    },
+  return [
+    Object.assign(stateRef, state),
     dispatch
-  }
+  ]
 }
 
 /**
