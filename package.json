@@ -1,7 +1,7 @@
 {
   "name": "react-life-hooks",
   "version": "1.0.4",
-  "description": "Helpers working around React Hooks API",
+  "description": "React hooks for better managing lifecycles for function component.",
   "main": "lib/index.js",
   "module": "esm/index.js",
   "files": [
@@ -25,7 +25,12 @@
   },
   "keywords": [
     "react",
-    "hooks"
+    "hooks",
+    "lifecycle",
+    "use",
+    "react-hooks",
+    "did mount",
+    "componentDidMount"
   ],
   "author": "James Yang <26634873@qq.com>",
   "license": "ISC",
