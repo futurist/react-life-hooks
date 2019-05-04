@@ -23,8 +23,20 @@ This lib require [React 16.8.0](https://reactjs.org/blog/2019/02/06/react-v16.8.
 Each helper can be imported individually:
 
 ```js
-import {onDidMount, onWillUnmount} from 'react-life-hooks';
-function Hello(){
+import {
+  onInit,
+  onDidMount,
+  onDidUpdate,
+  onDidRender,
+  onDidUpdate,
+  useLifeState,
+  useLifeReducer,
+  createUpdate,
+  createRef,
+  onChange,
+  onWillUnmount
+} from 'react-life-hooks';
+function createRef(create=>Hello(){
   onDidMount(()=>{
     console.log('component did mount!');
   });
@@ -32,7 +44,7 @@ function Hello(){
     console.log('component will unmount!');
   });
   return <div>Hello</div>
-}
+});
 ```
 
 ### API

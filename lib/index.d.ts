@@ -98,7 +98,7 @@ export declare function useTick(tickFn: any, clearTickFn: any, callback: any, op
  * @param componentFactory {Function} `exposeFunction -> React.Component`, the componentFactory should return component
  * @returns {React.Component}
  */
-export declare function exposeRef(componentFactory: any): any;
+export declare function exposeRef(createComponent: any): any;
 /**
  * > Check if value changed using shallowEqual check
  *

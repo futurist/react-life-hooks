@@ -189,11 +189,14 @@ export function useTick(tickFn, clearTickFn, callback, options) {
  * @param componentFactory {Function} `exposeFunction -> React.Component`, the componentFactory should return component
  * @returns {React.Component}
  */
-export function exposeRef(componentFactory) {
-    var expose = function (ref, fn, deps) {
+export function exposeRef(createComponent) {
+    var expose = function (ref) { return function (fn, deps) {
         useImperativeHandle(ref, fn, deps);
-    };
-    return forwardRef(componentFactory(expose));
+    }; };
+    function wrapComponent(props, ref) {
+        return createComponent(expose(ref))(props, ref);
+    }
+    return forwardRef(wrapComponent);
 }
 /**
  * > Check if value changed using shallowEqual check

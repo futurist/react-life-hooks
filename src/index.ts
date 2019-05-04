@@ -208,11 +208,14 @@ export function useTick (tickFn, clearTickFn, callback, options) {
  * @param componentFactory {Function} `exposeFunction -> React.Component`, the componentFactory should return component
  * @returns {React.Component}
  */
-export function exposeRef (componentFactory) {
-  const expose = (ref, fn, deps) => {
+export function exposeRef (createComponent) {
+  const expose = ref => (fn, deps) => {
     useImperativeHandle(ref, fn, deps)
   }
-  return forwardRef(componentFactory(expose))
+  function wrapComponent(props, ref) {
+    return createComponent(expose(ref))(props, ref)
+  }
+  return forwardRef(wrapComponent)
 }
 
 /**
