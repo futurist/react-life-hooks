@@ -9,7 +9,7 @@ var __assign = (this && this.__assign) || function () {
     };
     return __assign.apply(this, arguments);
 };
-import { forwardRef, useReducer, useRef, useEffect, useLayoutEffect, useImperativeHandle, useState, useMemo, useCallback } from 'react';
+import { forwardRef, useReducer, useRef, useEffect, useLayoutEffect, useImperativeHandle, useState, useMemo, useCallback, } from 'react';
 import shallowEqual from 'fbjs/lib/shallowEqual';
 var updateReducer = function (x) { return x + 1; };
 /**
@@ -59,7 +59,7 @@ export function onWillUnmount(callback, sync) {
  * @returns {void}
  */
 export function onDidUpdate(callback, sync) {
-    var renderRef = useRef();
+    var renderRef = useRef(false);
     function update() {
         if (renderRef.current === true) {
             callback();
@@ -114,7 +114,7 @@ export function useLifeState(initialState) {
  */
 export function useLifeReducer(reducer, initialState) {
     if (initialState === void 0) { initialState = {}; }
-    var stateRef = useMemo(typeof initialState === 'function' ? initialState : function () { return initialState; }, []);
+    var stateRef = useMemo((typeof initialState === 'function' ? initialState : function () { return initialState; }), []);
     if (typeof stateRef !== 'object') {
         throw 'initialState must be an object';
     }
@@ -158,7 +158,7 @@ export function useInterval(callback, delay) {
  */
 export function useTick(tickFn, clearTickFn, callback, options) {
     var savedId = useRef();
-    var savedCallback = useRef();
+    var savedCallback = useRef(function (arg) { });
     // Remember the latest callback.
     useEffect(function () {
         savedCallback.current = callback;
@@ -193,8 +193,12 @@ export function exposeRef(createComponent) {
     var expose = function (ref) { return function (fn, deps) {
         useImperativeHandle(ref, fn, deps);
     }; };
-    function wrapComponent(props, ref) {
-        return createComponent(expose(ref))(props, ref);
+    function wrapComponent() {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i] = arguments[_i];
+        }
+        return createComponent(expose(args[1])).apply(void 0, args);
     }
     return forwardRef(wrapComponent);
 }

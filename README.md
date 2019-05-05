@@ -27,24 +27,40 @@ import {
   onInit,
   onDidMount,
   onDidUpdate,
-  onDidRender,
-  onDidUpdate,
-  useLifeState,
-  useLifeReducer,
-  createUpdate,
-  createRef,
+  onWillUnmount,
   onChange,
-  onWillUnmount
-} from 'react-life-hooks';
-function createRef(create=>Hello(){
+  useLifeState,
+} from 'react-life-hooks'
+
+function Hello(props){
+  onInit(()=>{
+    console.log('this is like constructor');
+  })
   onDidMount(()=>{
-    console.log('component did mount!');
+    console.log('this is like componentDidMount');
+  });
+  onDidUpdate(()=>{
+    console.log('this is like componentDidUpdate');
   });
   onWillUnmount(()=>{
-    console.log('component will unmount!');
+    console.log('this is like componentWillUnmount');
   });
-  return <div>Hello</div>
-});
+  onChange(props, prevProps=>{
+    console.log('this is like componentWillReceiveProps')
+  })
+
+  // state, setState is life time, same reference in each render
+  const [state, setState] = useLifeState({x:1})
+  // below have no bugs any more
+  const onClick = () => {
+    setState({x: state.x+1})
+  }
+
+  return <div>
+    <span>{state.x}</span>
+    <button onClick={onClick}></button>
+  </div>
+};
 ```
 
 ### API

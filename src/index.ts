@@ -7,9 +7,16 @@ import {
   useImperativeHandle,
   useState,
   useMemo,
-  useCallback
+  useCallback,
+  RefForwardingComponent,
+  Ref,
+  DependencyList,
+  ForwardRefExoticComponent,
+  RefAttributes,
 } from 'react'
 import shallowEqual from 'fbjs/lib/shallowEqual'
+
+type AnyObject = {[key:string]: any};
 
 const updateReducer = x => x + 1;
 
@@ -64,7 +71,7 @@ export function onWillUnmount (callback, sync) {
  * @returns {void}
  */
 export function onDidUpdate (callback, sync) {
-  const renderRef = useRef()
+  const renderRef = useRef(false)
   function update () {
     if (renderRef.current === true) {
       callback()
@@ -110,6 +117,8 @@ export function useLifeState (initialState = {}) {
   ]
 }
 
+type FunctionOrObject = (() => AnyObject) | AnyObject;
+
 /**
  * > A component life time version of useReducer, the state never stale and safe to sue
  *
@@ -117,9 +126,9 @@ export function useLifeState (initialState = {}) {
  * @param initialState {object} The initial state object
  * @returns {object} [state, dispatch] The state/dispatch never stale
  */
-export function useLifeReducer (reducer, initialState = {}) {
+export function useLifeReducer (reducer, initialState:FunctionOrObject = ({} as AnyObject)) {
   const stateRef = useMemo(
-    typeof initialState === 'function' ? initialState : ()=>initialState,
+    (typeof initialState === 'function' ? initialState : ()=>initialState) as ()=>{},
     []
   )
   if(typeof stateRef !== 'object') {
@@ -168,7 +177,7 @@ export function useInterval (callback, delay) {
  */
 export function useTick (tickFn, clearTickFn, callback, options) {
   const savedId = useRef()
-  const savedCallback = useRef()
+  const savedCallback = useRef((arg:any)=>{})
 
   // Remember the latest callback.
   useEffect(
@@ -208,12 +217,20 @@ export function useTick (tickFn, clearTickFn, callback, options) {
  * @param componentFactory {Function} `exposeFunction -> React.Component`, the componentFactory should return component
  * @returns {React.Component}
  */
-export function exposeRef (createComponent) {
-  const expose = ref => (fn, deps) => {
+export function exposeRef (
+  createComponent: (ref: Ref<any>) => (...args: Parameters<RefForwardingComponent<any>>) => ReturnType<RefForwardingComponent<any>>
+): ReturnType<typeof forwardRef> {
+  const expose = (
+    ref: Ref<any>
+  ) => (
+    fn: () => {}, deps?: DependencyList
+  ) => {
     useImperativeHandle(ref, fn, deps)
   }
-  function wrapComponent(props, ref) {
-    return createComponent(expose(ref))(props, ref)
+  function wrapComponent(
+    ...args: Parameters<RefForwardingComponent<any>>
+  ): ReturnType<RefForwardingComponent<any>> {
+    return createComponent(expose(args[1]))(...args)
   }
   return forwardRef(wrapComponent)
 }

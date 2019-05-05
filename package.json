@@ -35,6 +35,7 @@
   "author": "James Yang <26634873@qq.com>",
   "license": "ISC",
   "devDependencies": {
+    "@types/react": "^16.8.16",
     "jest": "^24.7.1",
     "jsdoc-to-markdown": "^4.0.1",
     "rimraf": "^2.6.3",

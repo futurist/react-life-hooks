@@ -1,10 +1,14 @@
+import { forwardRef, RefForwardingComponent, Ref } from 'react';
+declare type AnyObject = {
+    [key: string]: any;
+};
 /**
  * > initialize when component first render
  *
  * @param callback {Function} The callback only run once when component initialize
  * @returns {Function} The forceUpdate function to re-render component
  */
-export declare function onInit(callback: any): any;
+export declare function onInit(callback: any): import("react").Dispatch<{}>;
 /**
  * > Similar to componentDidMount, first time creation
  *
@@ -44,14 +48,15 @@ export declare function onDidUpdate(callback: any, sync: any): void;
  *
  * @returns {Function} The forceUpdate function to re-render component
  */
-export declare function useUpdate(): any;
+export declare function useUpdate(): import("react").Dispatch<{}>;
 /**
  * > A component life time version of useState, the state never stale and safe to use
  *
  * @param initialState {object} The initial state object
  * @returns {object} [state, setState] The state/setState never stale
  */
-export declare function useLifeState(initialState?: {}): any[];
+export declare function useLifeState(initialState?: {}): {}[];
+declare type FunctionOrObject = (() => AnyObject) | AnyObject;
 /**
  * > A component life time version of useReducer, the state never stale and safe to sue
  *
@@ -59,7 +64,7 @@ export declare function useLifeState(initialState?: {}): any[];
  * @param initialState {object} The initial state object
  * @returns {object} [state, dispatch] The state/dispatch never stale
  */
-export declare function useLifeReducer(reducer: any, initialState?: {}): any[];
+export declare function useLifeReducer(reducer: any, initialState?: FunctionOrObject): any[];
 /**
  * > Like setTimeout, but auto destroyed when re-render
  *
@@ -67,7 +72,7 @@ export declare function useLifeReducer(reducer: any, initialState?: {}): any[];
  * @param delay {Number|null|undefined} seconds to delay, null to stop
  * @returns {React.RefObject} the useRef object to setTimeout id
  */
-export declare function useTimeout(callback: any, delay: any): any;
+export declare function useTimeout(callback: any, delay: any): import("react").MutableRefObject<undefined>;
 /**
  * > Like setInterval, but auto destroyed when re-render
  *
@@ -75,7 +80,7 @@ export declare function useTimeout(callback: any, delay: any): any;
  * @param delay {Number|null|undefined} seconds to delay, null to stop
  * @returns {React.RefObject} the ref to setInterval id
  */
-export declare function useInterval(callback: any, delay: any): any;
+export declare function useInterval(callback: any, delay: any): import("react").MutableRefObject<undefined>;
 /**
  * > Tick like functions helper method, auto destroyed when re-render
  *
@@ -85,7 +90,7 @@ export declare function useInterval(callback: any, delay: any): any;
  * @param options {Number|null|undefined} options to pass with callback, null to stop
  * @returns {React.RefObject} the ref to setInterval id
  */
-export declare function useTick(tickFn: any, clearTickFn: any, callback: any, options: any): any;
+export declare function useTick(tickFn: any, clearTickFn: any, callback: any, options: any): import("react").MutableRefObject<undefined>;
 /**
  * > Expose function component ref to parent
  *
@@ -98,7 +103,7 @@ export declare function useTick(tickFn: any, clearTickFn: any, callback: any, op
  * @param componentFactory {Function} `exposeFunction -> React.Component`, the componentFactory should return component
  * @returns {React.Component}
  */
-export declare function exposeRef(createComponent: any): any;
+export declare function exposeRef(createComponent: (ref: Ref<any>) => (...args: Parameters<RefForwardingComponent<any>>) => ReturnType<RefForwardingComponent<any>>): ReturnType<typeof forwardRef>;
 /**
  * > Check if value changed using shallowEqual check
  *
@@ -106,3 +111,4 @@ export declare function exposeRef(createComponent: any): any;
  * @param callback {Function} prevValue => any, Passed in previous value when current value changed
  */
 export declare function onChange(value: any, callback: any): boolean;
+export {};
