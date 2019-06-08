@@ -13,6 +13,8 @@ import {
   DependencyList,
   ForwardRefExoticComponent,
   RefAttributes,
+  EffectCallback,
+  Reducer,
 } from 'react'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 
@@ -24,10 +26,10 @@ const updateReducer = x => x + 1;
  * > initialize when component first render
  *
  * @param callback {Function} The callback only run once when component initialize
- * @returns {Function} The forceUpdate function to re-render component
+ * @returns {any} The value returned will be the return value of `useMemo` (keep same during each render)
  */
-export function onInit (callback) {
-  return useReducer(updateReducer, 0, ()=>callback())[1]
+export function onInit (callback: EffectCallback): any {
+  return useMemo(callback, [])
 }
 
 /**
@@ -37,7 +39,7 @@ export function onInit (callback) {
  * @param sync {Boolean} whether to run after layout or deferred after paint
  * @returns {void}
  */
-export function onDidMount (callback, sync) {
+export function onDidMount (callback: EffectCallback, sync?: boolean) {
   sync ? useLayoutEffect(callback, []) : useEffect(callback, [])
 }
 
@@ -48,7 +50,7 @@ export function onDidMount (callback, sync) {
  * @param sync {Boolean} whether to run after layout or deferred after paint
  * @returns {void}
  */
-export function onDidRender (callback, sync) {
+export function onDidRender (callback: EffectCallback, sync?: boolean) {
   sync ? useLayoutEffect(callback) : useEffect(callback)
 }
 
@@ -59,8 +61,8 @@ export function onDidRender (callback, sync) {
  * @param sync {Boolean} whether to run after layout or deferred after paint
  * @returns {void}
  */
-export function onWillUnmount (callback, sync) {
-  sync ? useLayoutEffect(() => callback, []) : useEffect(() => callback, [])
+export function onWillUnmount (callback: EffectCallback, sync?: boolean) {
+  sync ? useLayoutEffect(callback, []) : useEffect(callback, [])
 }
 
 /**
@@ -70,7 +72,7 @@ export function onWillUnmount (callback, sync) {
  * @param sync {Boolean} whether to run after layout or deferred after paint
  * @returns {void}
  */
-export function onDidUpdate (callback, sync) {
+export function onDidUpdate (callback: EffectCallback, sync?: boolean) {
   const renderRef = useRef(false)
   function update () {
     if (renderRef.current === true) {
@@ -99,7 +101,7 @@ export function useUpdate () {
  * @param initialState {object} The initial state object
  * @returns {object} [state, setState] The state/setState never stale
  */
-export function useLifeState (initialState = {}) {
+export function useLifeState (initialState: AnyObject = {}) {
   const [state, setState] = useState(initialState)
   const stateRef = useMemo(()=>state, [])
   if(typeof stateRef !== 'object') {
@@ -126,7 +128,7 @@ type FunctionOrObject = (() => AnyObject) | AnyObject;
  * @param initialState {object} The initial state object
  * @returns {object} [state, dispatch] The state/dispatch never stale
  */
-export function useLifeReducer (reducer, initialState:FunctionOrObject = ({} as AnyObject)) {
+export function useLifeReducer (reducer: Reducer<AnyObject, any>, initialState:FunctionOrObject = ({} as AnyObject)) {
   const stateRef = useMemo(
     (typeof initialState === 'function' ? initialState : ()=>initialState) as ()=>{},
     []
@@ -151,7 +153,7 @@ export function useLifeReducer (reducer, initialState:FunctionOrObject = ({} as 
  * @param delay {Number|null|undefined} seconds to delay, null to stop
  * @returns {React.RefObject} the useRef object to setTimeout id
  */
-export function useTimeout (callback, delay) {
+export function useTimeout (callback, delay?) {
   return useTick(setTimeout, clearTimeout, callback, delay)
 }
 
@@ -162,7 +164,7 @@ export function useTimeout (callback, delay) {
  * @param delay {Number|null|undefined} seconds to delay, null to stop
  * @returns {React.RefObject} the ref to setInterval id
  */
-export function useInterval (callback, delay) {
+export function useInterval (callback, delay?) {
   return useTick(setInterval, clearInterval, callback, delay)
 }
 
@@ -175,7 +177,7 @@ export function useInterval (callback, delay) {
  * @param options {Number|null|undefined} options to pass with callback, null to stop
  * @returns {React.RefObject} the ref to setInterval id
  */
-export function useTick (tickFn, clearTickFn, callback, options) {
+export function useTick (tickFn, clearTickFn, callback, options?) {
   const savedId = useRef()
   const savedCallback = useRef((arg:any)=>{})
 
@@ -241,8 +243,8 @@ export function exposeRef (
  * @param value {any} The value to check, with previous cached version
  * @param callback {Function} prevValue => any, Passed in previous value when current value changed
  */
-export function onChange (value, callback) {
-  const ref = useRef(value)
+export function onChange (value: any, callback: Function) {
+  const ref = useRef({})
   const {current} = ref
   ref.current = value
   const isChanged = !shallowEqual(value, current)

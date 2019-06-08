@@ -16,10 +16,10 @@ var updateReducer = function (x) { return x + 1; };
  * > initialize when component first render
  *
  * @param callback {Function} The callback only run once when component initialize
- * @returns {Function} The forceUpdate function to re-render component
+ * @returns {any} The value returned will be the return value of `useMemo` (keep same during each render)
  */
 export function onInit(callback) {
-    return useReducer(updateReducer, 0, function () { return callback(); })[1];
+    return useMemo(callback, []);
 }
 /**
  * > Similar to componentDidMount, first time creation
@@ -49,7 +49,7 @@ export function onDidRender(callback, sync) {
  * @returns {void}
  */
 export function onWillUnmount(callback, sync) {
-    sync ? useLayoutEffect(function () { return callback; }, []) : useEffect(function () { return callback; }, []);
+    sync ? useLayoutEffect(callback, []) : useEffect(callback, []);
 }
 /**
  * > Similar to componentDidUpdate, skip run for first time render
@@ -209,7 +209,7 @@ export function exposeRef(createComponent) {
  * @param callback {Function} prevValue => any, Passed in previous value when current value changed
  */
 export function onChange(value, callback) {
-    var ref = useRef(value);
+    var ref = useRef({});
     var current = ref.current;
     ref.current = value;
     var isChanged = !shallowEqual(value, current);

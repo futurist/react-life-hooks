@@ -1,4 +1,4 @@
-import { forwardRef, RefForwardingComponent, Ref } from 'react';
+import { forwardRef, RefForwardingComponent, Ref, EffectCallback, Reducer } from 'react';
 declare type AnyObject = {
     [key: string]: any;
 };
@@ -6,9 +6,9 @@ declare type AnyObject = {
  * > initialize when component first render
  *
  * @param callback {Function} The callback only run once when component initialize
- * @returns {Function} The forceUpdate function to re-render component
+ * @returns {any} The value returned will be the return value of `useMemo` (keep same during each render)
  */
-export declare function onInit(callback: any): import("react").Dispatch<{}>;
+export declare function onInit(callback: EffectCallback): any;
 /**
  * > Similar to componentDidMount, first time creation
  *
@@ -16,7 +16,7 @@ export declare function onInit(callback: any): import("react").Dispatch<{}>;
  * @param sync {Boolean} whether to run after layout or deferred after paint
  * @returns {void}
  */
-export declare function onDidMount(callback: any, sync: any): void;
+export declare function onDidMount(callback: EffectCallback, sync?: boolean): void;
 /**
  * > Callback after each render(), first time and later
  *
@@ -24,7 +24,7 @@ export declare function onDidMount(callback: any, sync: any): void;
  * @param sync {Boolean} whether to run after layout or deferred after paint
  * @returns {void}
  */
-export declare function onDidRender(callback: any, sync: any): void;
+export declare function onDidRender(callback: EffectCallback, sync?: boolean): void;
 /**
  * > Similar to componentWillUnmount, before DOM removed
  *
@@ -32,7 +32,7 @@ export declare function onDidRender(callback: any, sync: any): void;
  * @param sync {Boolean} whether to run after layout or deferred after paint
  * @returns {void}
  */
-export declare function onWillUnmount(callback: any, sync: any): void;
+export declare function onWillUnmount(callback: EffectCallback, sync?: boolean): void;
 /**
  * > Similar to componentDidUpdate, skip run for first time render
  *
@@ -40,7 +40,7 @@ export declare function onWillUnmount(callback: any, sync: any): void;
  * @param sync {Boolean} whether to run after layout or deferred after paint
  * @returns {void}
  */
-export declare function onDidUpdate(callback: any, sync: any): void;
+export declare function onDidUpdate(callback: EffectCallback, sync?: boolean): void;
 /**
  * > Per useReducer/useState return value
  *
@@ -55,7 +55,7 @@ export declare function useUpdate(): import("react").Dispatch<{}>;
  * @param initialState {object} The initial state object
  * @returns {object} [state, setState] The state/setState never stale
  */
-export declare function useLifeState(initialState?: {}): {}[];
+export declare function useLifeState(initialState?: AnyObject): AnyObject[];
 declare type FunctionOrObject = (() => AnyObject) | AnyObject;
 /**
  * > A component life time version of useReducer, the state never stale and safe to sue
@@ -64,7 +64,7 @@ declare type FunctionOrObject = (() => AnyObject) | AnyObject;
  * @param initialState {object} The initial state object
  * @returns {object} [state, dispatch] The state/dispatch never stale
  */
-export declare function useLifeReducer(reducer: any, initialState?: FunctionOrObject): any[];
+export declare function useLifeReducer(reducer: Reducer<AnyObject, any>, initialState?: FunctionOrObject): any[];
 /**
  * > Like setTimeout, but auto destroyed when re-render
  *
@@ -72,7 +72,7 @@ export declare function useLifeReducer(reducer: any, initialState?: FunctionOrOb
  * @param delay {Number|null|undefined} seconds to delay, null to stop
  * @returns {React.RefObject} the useRef object to setTimeout id
  */
-export declare function useTimeout(callback: any, delay: any): import("react").MutableRefObject<undefined>;
+export declare function useTimeout(callback: any, delay?: any): import("react").MutableRefObject<undefined>;
 /**
  * > Like setInterval, but auto destroyed when re-render
  *
@@ -80,7 +80,7 @@ export declare function useTimeout(callback: any, delay: any): import("react").M
  * @param delay {Number|null|undefined} seconds to delay, null to stop
  * @returns {React.RefObject} the ref to setInterval id
  */
-export declare function useInterval(callback: any, delay: any): import("react").MutableRefObject<undefined>;
+export declare function useInterval(callback: any, delay?: any): import("react").MutableRefObject<undefined>;
 /**
  * > Tick like functions helper method, auto destroyed when re-render
  *
@@ -90,7 +90,7 @@ export declare function useInterval(callback: any, delay: any): import("react").
  * @param options {Number|null|undefined} options to pass with callback, null to stop
  * @returns {React.RefObject} the ref to setInterval id
  */
-export declare function useTick(tickFn: any, clearTickFn: any, callback: any, options: any): import("react").MutableRefObject<undefined>;
+export declare function useTick(tickFn: any, clearTickFn: any, callback: any, options?: any): import("react").MutableRefObject<undefined>;
 /**
  * > Expose function component ref to parent
  *
@@ -110,5 +110,5 @@ export declare function exposeRef(createComponent: (ref: Ref<any>) => (...args: 
  * @param value {any} The value to check, with previous cached version
  * @param callback {Function} prevValue => any, Passed in previous value when current value changed
  */
-export declare function onChange(value: any, callback: any): boolean;
+export declare function onChange(value: any, callback: Function): boolean;
 export {};

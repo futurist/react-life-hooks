@@ -4,7 +4,7 @@
 ## Functions
 
 <dl>
-<dt><a href="#onInit">onInit(callback)</a> ⇒ <code>function</code></dt>
+<dt><a href="#onInit">onInit(callback)</a> ⇒ <code>any</code></dt>
 <dd><blockquote>
 <p>initialize when component first render</p>
 </blockquote>
@@ -77,11 +77,11 @@
 
 <a name="onInit"></a>
 
-## onInit(callback) ⇒ <code>function</code>
+## onInit(callback) ⇒ <code>any</code>
 > initialize when component first render
 
 **Kind**: global function  
-**Returns**: <code>function</code> - The forceUpdate function to re-render component  
+**Returns**: <code>any</code> - The value returned will be the return value of `useMemo` (keep same during each render)  
 
 | Param | Type | Description |
 | --- | --- | --- |
