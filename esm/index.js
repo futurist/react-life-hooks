@@ -49,7 +49,7 @@ export function onDidRender(callback, sync) {
  * @returns {void}
  */
 export function onWillUnmount(callback, sync) {
-    sync ? useLayoutEffect(callback, []) : useEffect(callback, []);
+    sync ? useLayoutEffect(function () { return callback; }, []) : useEffect(function () { return callback; }, []);
 }
 /**
  * > Similar to componentDidUpdate, skip run for first time render

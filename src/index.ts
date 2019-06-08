@@ -62,8 +62,8 @@ export function onDidRender (callback: EffectCallback, sync?: boolean) {
  * @param sync {Boolean} whether to run after layout or deferred after paint
  * @returns {void}
  */
-export function onWillUnmount (callback: EffectCallback, sync?: boolean) {
-  sync ? useLayoutEffect(callback, []) : useEffect(callback, [])
+export function onWillUnmount (callback: () => void | undefined, sync?: boolean) {
+  sync ? useLayoutEffect(() => callback, []) : useEffect(() => callback, [])
 }
 
 /**

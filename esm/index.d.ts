@@ -1,4 +1,4 @@
-import { forwardRef, RefForwardingComponent, Ref, EffectCallback, Reducer } from 'react';
+import { forwardRef, RefForwardingComponent, Ref, EffectCallback, Reducer, Dispatch } from 'react';
 declare type AnyObject = {
     [key: string]: any;
 };
@@ -32,7 +32,7 @@ export declare function onDidRender(callback: EffectCallback, sync?: boolean): v
  * @param sync {Boolean} whether to run after layout or deferred after paint
  * @returns {void}
  */
-export declare function onWillUnmount(callback: EffectCallback, sync?: boolean): void;
+export declare function onWillUnmount(callback: () => void | undefined, sync?: boolean): void;
 /**
  * > Similar to componentDidUpdate, skip run for first time render
  *
@@ -48,14 +48,14 @@ export declare function onDidUpdate(callback: EffectCallback, sync?: boolean): v
  *
  * @returns {Function} The forceUpdate function to re-render component
  */
-export declare function useUpdate(): import("react").Dispatch<{}>;
+export declare function useUpdate(): Dispatch<any>;
 /**
  * > A component life time version of useState, the state never stale and safe to use
  *
  * @param initialState {object} The initial state object
  * @returns {object} [state, setState] The state/setState never stale
  */
-export declare function useLifeState(initialState?: AnyObject): AnyObject[];
+export declare function useLifeState(initialState?: any): [any, Function];
 declare type FunctionOrObject = (() => AnyObject) | AnyObject;
 /**
  * > A component life time version of useReducer, the state never stale and safe to sue
@@ -64,7 +64,7 @@ declare type FunctionOrObject = (() => AnyObject) | AnyObject;
  * @param initialState {object} The initial state object
  * @returns {object} [state, dispatch] The state/dispatch never stale
  */
-export declare function useLifeReducer(reducer: Reducer<AnyObject, any>, initialState?: FunctionOrObject): any[];
+export declare function useLifeReducer(reducer: Reducer<AnyObject, any>, initialState?: FunctionOrObject): [any, Dispatch<any>];
 /**
  * > Like setTimeout, but auto destroyed when re-render
  *
