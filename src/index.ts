@@ -15,6 +15,7 @@ import {
   RefAttributes,
   EffectCallback,
   Reducer,
+  Dispatch,
 } from 'react'
 import shallowEqual from 'fbjs/lib/shallowEqual'
 
@@ -91,7 +92,7 @@ export function onDidUpdate (callback: EffectCallback, sync?: boolean) {
  *
  * @returns {Function} The forceUpdate function to re-render component
  */
-export function useUpdate () {
+export function useUpdate (): Dispatch<any> {
   return useReducer(updateReducer, 0)[1]
 }
 
@@ -101,7 +102,7 @@ export function useUpdate () {
  * @param initialState {object} The initial state object
  * @returns {object} [state, setState] The state/setState never stale
  */
-export function useLifeState (initialState: AnyObject = {}) {
+export function useLifeState (initialState: any = {}): [any, Function] {
   const [state, setState] = useState(initialState)
   const stateRef = useMemo(()=>state, [])
   if(typeof stateRef !== 'object') {
@@ -128,7 +129,7 @@ type FunctionOrObject = (() => AnyObject) | AnyObject;
  * @param initialState {object} The initial state object
  * @returns {object} [state, dispatch] The state/dispatch never stale
  */
-export function useLifeReducer (reducer: Reducer<AnyObject, any>, initialState:FunctionOrObject = ({} as AnyObject)) {
+export function useLifeReducer (reducer: Reducer<AnyObject, any>, initialState:FunctionOrObject = ({} as AnyObject)): [any, Dispatch<any>] {
   const stateRef = useMemo(
     (typeof initialState === 'function' ? initialState : ()=>initialState) as ()=>{},
     []
