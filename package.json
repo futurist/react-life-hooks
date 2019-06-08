@@ -1,6 +1,6 @@
 {
   "name": "react-life-hooks",
-  "version": "1.0.7",
+  "version": "1.0.8",
   "description": "React hooks for better managing lifecycles for function component.",
   "main": "lib/index.js",
   "module": "esm/index.js",
