@@ -86,14 +86,16 @@ export function onDidUpdate (callback: EffectCallback, sync?: boolean) {
 }
 
 /**
- * > Per useReducer/useState return value
+ * > Return redraw function like this.forceUpdate in Class Component
  *
- * forceUpdate is similar to this.forceUpdate in Class Component
+ * the redraw function keep same reference between render.
  *
  * @returns {Function} The forceUpdate function to re-render component
  */
-export function useUpdate (): Dispatch<any> {
-  return useReducer(updateReducer, 0)[1]
+export function useRedraw (): Function {
+  const dispatch =  useReducer(updateReducer, 0)[1]
+  const redraw = useCallback(()=>dispatch(0), [])
+  return redraw
 }
 
 /**

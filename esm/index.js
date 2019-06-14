@@ -71,14 +71,16 @@ export function onDidUpdate(callback, sync) {
     sync ? useLayoutEffect(update) : useEffect(update);
 }
 /**
- * > Per useReducer/useState return value
+ * > Return redraw function like this.forceUpdate in Class Component
  *
- * forceUpdate is similar to this.forceUpdate in Class Component
+ * the redraw function keep same reference between render.
  *
  * @returns {Function} The forceUpdate function to re-render component
  */
-export function useUpdate() {
-    return useReducer(updateReducer, 0)[1];
+export function useRedraw() {
+    var dispatch = useReducer(updateReducer, 0)[1];
+    var redraw = useCallback(function () { return dispatch(0); }, []);
+    return redraw;
 }
 /**
  * > A component life time version of useState, the state never stale and safe to use

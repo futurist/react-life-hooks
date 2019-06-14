@@ -29,11 +29,11 @@
 <p>Similar to componentDidUpdate, skip run for first time render</p>
 </blockquote>
 </dd>
-<dt><a href="#useUpdate">useUpdate()</a> ⇒ <code>function</code></dt>
+<dt><a href="#useRedraw">useRedraw()</a> ⇒ <code>function</code></dt>
 <dd><blockquote>
-<p>Per useReducer/useState return value</p>
+<p>Return redraw function like this.forceUpdate in Class Component</p>
 </blockquote>
-<p>forceUpdate is similar to this.forceUpdate in Class Component</p>
+<p>the redraw function keep same reference between render.</p>
 </dd>
 <dt><a href="#useLifeState">useLifeState(initialState)</a> ⇒ <code>object</code></dt>
 <dd><blockquote>
@@ -135,12 +135,12 @@
 | callback | <code>function</code> | to run after component rendered |
 | sync | <code>Boolean</code> | whether to run after layout or deferred after paint |
 
-<a name="useUpdate"></a>
+<a name="useRedraw"></a>
 
-## useUpdate() ⇒ <code>function</code>
-> Per useReducer/useState return value
+## useRedraw() ⇒ <code>function</code>
+> Return redraw function like this.forceUpdate in Class Component
 
-forceUpdate is similar to this.forceUpdate in Class Component
+the redraw function keep same reference between render.
 
 **Kind**: global function  
 **Returns**: <code>function</code> - The forceUpdate function to re-render component  

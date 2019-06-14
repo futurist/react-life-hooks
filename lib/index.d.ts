@@ -42,13 +42,13 @@ export declare function onWillUnmount(callback: () => void | undefined, sync?: b
  */
 export declare function onDidUpdate(callback: EffectCallback, sync?: boolean): void;
 /**
- * > Per useReducer/useState return value
+ * > Return redraw function like this.forceUpdate in Class Component
  *
- * forceUpdate is similar to this.forceUpdate in Class Component
+ * the redraw function keep same reference between render.
  *
  * @returns {Function} The forceUpdate function to re-render component
  */
-export declare function useUpdate(): Dispatch<any>;
+export declare function useRedraw(): Function;
 /**
  * > A component life time version of useState, the state never stale and safe to use
  *
