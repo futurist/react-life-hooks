@@ -79,8 +79,8 @@ export function onDidUpdate(callback, sync) {
  */
 export function useRedraw() {
     var dispatch = useReducer(updateReducer, 0)[1];
-    var redraw = useCallback(function () { return dispatch(0); }, []);
-    return redraw;
+    // const redraw = useCallback(()=>dispatch(0), [])
+    return dispatch;
 }
 /**
  * > A component life time version of useState, the state never stale and safe to use
