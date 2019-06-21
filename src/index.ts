@@ -247,12 +247,16 @@ export function exposeRef (
  * @param callback {Function} prevValue => any, Passed in previous value when current value changed
  */
 export function onChange (value: any, callback: Function) {
-  const ref = useRef({})
+  const ref = useRef<any>({})
+  const disposer = useRef<any>()
   const {current} = ref
   ref.current = value
   const isChanged = !shallowEqual(value, current)
   if(isChanged) {
-    callback && callback(current)
+    if(typeof disposer.current === 'function') {
+      disposer.current()
+    }
+    disposer.current = callback && callback(current)
   }
   return isChanged
 }
