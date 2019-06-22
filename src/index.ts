@@ -94,8 +94,8 @@ export function onDidUpdate (callback: EffectCallback, sync?: boolean) {
  */
 export function useRedraw (): Function {
   const dispatch =  useReducer(updateReducer, 0)[1]
-  // const redraw = useCallback(()=>dispatch(0), [])
-  return dispatch as Function
+  const redraw = useCallback(()=>dispatch(0), [])
+  return redraw
 }
 
 /**

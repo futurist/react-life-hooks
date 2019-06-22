@@ -79,8 +79,8 @@ export function onDidUpdate(callback, sync) {
  */
 export function useRedraw() {
     var dispatch = useReducer(updateReducer, 0)[1];
-    // const redraw = useCallback(()=>dispatch(0), [])
-    return dispatch;
+    var redraw = useCallback(function () { return dispatch(0); }, []);
+    return redraw;
 }
 /**
  * > A component life time version of useState, the state never stale and safe to use
@@ -212,11 +212,15 @@ export function exposeRef(createComponent) {
  */
 export function onChange(value, callback) {
     var ref = useRef({});
+    var disposer = useRef();
     var current = ref.current;
     ref.current = value;
     var isChanged = !shallowEqual(value, current);
     if (isChanged) {
-        callback && callback(current);
+        if (typeof disposer.current === 'function') {
+            disposer.current();
+        }
+        disposer.current = callback && callback(current);
     }
     return isChanged;
 }
